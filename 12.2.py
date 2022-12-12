@@ -18,7 +18,7 @@ def main():
         possible_set = set()
         cur_value = heightmap[ii, jj]
         for n_i, n_j in neighbours(ii, jj):
-            if heightmap[n_i, n_j] - cur_value <= 1:
+            if heightmap[n_i, n_j] - cur_value >= -1:
                 possible_set.add((n_i, n_j))
         return possible_set
         
@@ -30,7 +30,6 @@ def main():
     with open(filename) as f:
         for i, line in enumerate(f):
             if (j := line.find('S')) != -1:
-                S_loc = (i, j)
                 line = line[:j] + 'a' + line[j + 1:]
             if (j := line.find('E')) != -1:
                 E_loc = (i, j)
@@ -38,16 +37,17 @@ def main():
             heightmap.append(list(map(lambda x: ord(x) - ord('a'), list(line.rstrip()))))
     heightmap = np.array(heightmap)
     # print(heightmap)
-    # print(S_loc, E_loc)
+    # print(S_loc)
 
-    current_loc = {S_loc}
+    current_loc = {E_loc}
     len_i, len_j = np.shape(heightmap)
     stepsmap = np.full_like(heightmap, len_i * len_j)
     step = 0
-    stepsmap[S_loc] = step
+    stepsmap[E_loc] = step
     print(stepsmap)
 
-    while E_loc not in current_loc and step < len_i * len_j and len(current_loc) > 0:
+    found = False
+    while len(current_loc) > 0 and not found:
         step += 1
         next_loc = set()
         for cur_l in current_loc:
@@ -56,9 +56,11 @@ def main():
                 if stepsmap[pos] > step:
                     stepsmap[pos] = step
                     next_loc.add(pos)
+                    if heightmap[pos] == 0:
+                        found = True
         current_loc = next_loc
     print(stepsmap)
-    print(stepsmap[E_loc])
+    print(step)
 
 if __name__ == '__main__':
     main()
