@@ -43,7 +43,6 @@ def main():
                     robots = way[3].copy()
                     robots[r] += 1
                     resourses = [way[2][i] + delta_t * rob - costs[r][i] for i, rob in enumerate(way[3])]
-                    # TODO wenn zu lange um max_geode zu bekommen -> nicht append
                     if (resourses[3] + (T-time)/2 * (2 * robots[3] + (T-time) - 1)) > max_geodes[-1]:
                         next_tree.append([way0, time, resourses, robots])
                 if way[3][3] != 0:
